@@ -13,23 +13,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 14
-
-      - name: Install project dependencies
-        run: npm install
-
-      - name: Build project
-        run: npm run build
-
-      - name: Deploy to Local Machine
+      - name: Build and tag Docker image
         run: |
-          LOCAL_DEPLOY_DIR="/home/wot-raj/Raj/devops-test-demo/my-app"
-          cp -r build/* $LOCAL_DEPLOY_DIR
-          # cd $LOCAL_DEPLOY_DIR
-          # npm install
-          # npm start
+          docker build -t devops-test-demo .
+          docker tag devops-test-demo devops-test-demo:latest
+        working-directory: /home/wot-raj/Raj/devops-test-demo
 
-        working-directory: /home/wot-raj/Raj/devops-test-demo/my-app
+      - name: Deploy Docker image to Local Machine
+        run: |
+          # Start the Docker container on your local machine
+          docker run -d -p 3005:3005 devops-test-demo
+        working-directory: /home/wot-raj/Raj/devops-test-demo
+
+      - name: Confirm Deployment
+        run: |
+          # Optionally, you can add a step to check if the application is running
+          curl http://localhost:3005
+        continue-on-error: true
