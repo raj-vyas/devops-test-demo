@@ -17,13 +17,13 @@ jobs:
         run: |
           docker build -t devops-test-demo .
           docker tag devops-test-demo devops-test-demo:latest
-        working-directory: /home/wot-raj/Raj/devops-test-demo
+        working-directory: .
 
       - name: Deploy Docker image to Local Machine
         run: |
           # Start the Docker container on your local machine
           docker run -d -p 3005:3005 devops-test-demo
-        working-directory: /home/wot-raj/Raj/devops-test-demo
+        working-directory: .
 
       - name: Confirm Deployment
         run: |
